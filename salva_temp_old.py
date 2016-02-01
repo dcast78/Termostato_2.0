@@ -45,4 +45,4 @@ def read_temp():
 	
 print(device_folder + " " + str(read_temp()))	
 r = redis.StrictRedis(host=db_host, port=6379, db=db_id,password='Termostato_2.0')
-r.lset(sys.argv[3],-1,float(read_temp()))
+r.rpush(sys.argv[3],float(read_temp()))

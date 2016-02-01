@@ -60,7 +60,7 @@ print "Temperatura attuale nella stanza: " + str(input)
 #setpoint e' la temperatura in gradi da raggiungere
 setpoint=r.get(n_setpoint+"_max")
 print "Temperatura da raggiungere:" + str(setpoint)
-r.lset("setpoint",-1,setpoint)
+r.rpush("setpoint",setpoint)
 
 t_min=r.get(n_setpoint+"_min")
 print "Temperatura minima: " + str(t_min)
@@ -88,7 +88,7 @@ if s_forceon==1:
 	rele=1
 	print "Accensione forzata impostata"
 
-r.lset("rele",-1,rele)
+r.rpush("rele",rele)
 #pubblica sul canale rele_ch lo stato del rele per i client che hanno sottoscritto il canale con pusub
 r.publish("rele_ch", rele)
 #p_blocc e' un'uscita utilizzabile per bloccare una perifarica che non deve stare accesa mentre la caldaia e' in funzione 
