@@ -19,14 +19,14 @@ else:
 	sys.exit	
 
 import urllib2
-response = urllib2.urlopen('http://192.168.1.137:1080/')
+response = urllib2.urlopen(sys.argv[4])
 html = response.read()
-
+print html
 
 intestazione,temp=html.split(' ')
 temp=float(temp.replace("C",""))
 print temp
 if temp < 80:
 	r = redis.StrictRedis(host=db_host, port=6379, db=db_id,password='Termostato_2.0')
-	r.rpush(sys.argv[3],temp)
+	r.lset(sys.argv[3],-1,temp)
 
