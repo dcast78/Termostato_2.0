@@ -17,12 +17,11 @@ else:
 	print "Utilizzo i parametri di default: " + db_host + " " + str(db_id)
 
 r = redis.StrictRedis(host=db_host, port=6379, db=db_id,password='Termostato_2.0')
-r.lrem("setpoint",1,"")
 r.rpush("timestamp",time.strftime("%s"))
 r.rpush("rele","")
-r.rpush("setpoint","")
+#r.rpush("setpoint","")
 i=0
 while i < r.llen("camere"):
-        r.rpush(r.lrange("camere",i,i),"") 
+        r.rpush(r.lrange("camere",i,i)[0],"16") 
         i = i + 1
 
