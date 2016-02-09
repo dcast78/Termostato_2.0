@@ -22,7 +22,7 @@ def data_subscribe():
 	ps.subscribe(channel)
 	for message in ps.listen():
 		a=message
-	#	print int(a['data'])
+		print int(a['data'])
 		GPIO.output(22, int(a['data']))
 
 def main():
