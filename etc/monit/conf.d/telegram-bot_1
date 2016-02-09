@@ -1,0 +1,5 @@
+ check process telegram-bot_1 with pidfile /var/run/telegram/telegram-bot_1.pid
+   group root 
+   group root 
+   start program = "/etc/init.d/telegram-bot_1 start"
+   stop program = "/etc/init.d/telegram-bot_1 stop"

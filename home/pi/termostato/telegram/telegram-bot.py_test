@@ -1,0 +1,213 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Simple Bot to reply to Telegram messages
+# This program is dedicated to the public domain under the CC0 license.
+
+from telegram import Updater
+import logging
+
+# Enable logging
+logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        level=logging.INFO)
+
+logger = logging.getLogger(__name__)
+
+# Setup config redis
+import redis
+import time
+import calendar
+import datetime
+import sys
+
+if len(sys.argv) > 2:
+        db_host=sys.argv[1]
+        db_id=sys.argv[2]
+        
+else:
+        print "Attenzione: lo script va lanciato con due argomenti!  "
+        print "Lancia lo script: " + sys.argv[0] + "<db_host (es: 127.0.0.1)> <id database (es:0)>" 
+        db_host='termostato_m'
+        db_id=0
+        print "Utilizzo i parametri di default: " + db_host + " " + str(db_id)
+#
+
+r = redis.StrictRedis(host='localhost', port=6379, db=db_id, password='Termostato_2.0')
+
+import os
+import subprocess
+
+# We use this var to save the last chat id, so we can reply to it
+last_chat_id = 0
+
+
+update_queue = 0
+
+pid = str(os.getpid())
+pidfile = "/var/run/telegram/telegram-bot_" + db_id + ".pid"
+#if os.path.isfile(pidfile):
+#    print "Processo gia attivo vedi file %s" % pidfile
+#    sys.exit()
+#else:
+file(pidfile, 'w').write(pid)
+print pid
+
+import urllib2
+
+try:
+   u = urllib2.urlopen("https://telegram.org/")
+except Exception as e:
+   #inform them that a general error has occurred 
+   print ("Errore generico")
+   sys.exit(1024)
+
+
+
+def temp_handler(channel):
+    global update_queue
+
+    print "Temp alarm"
+    print update_queue
+#    update_queue.put("temp_alarm");
+    get_rele
+
+# Define a few command handlers. These usually take the two arguments bot and
+# update. Error handlers also receive the raised TelegramError object in error.
+def start(bot, update):
+    bot.sendMessage(update.message.chat_id, text='Ciao %s, questo bot gestisce Termostato_2.0!\nTi consiglio di provare il comando /help per vedere la lista dei comandi disponibili\n' % ( update.message.from_user.first_name))
+
+
+def help(bot, update):
+    bot.sendMessage(update.message.chat_id, text='/start Visualizza il messaggio di benvenuto')
+    bot.sendMessage(update.message.chat_id, text='/help mostra la lista dei comandi attivi')
+    bot.sendMessage(update.message.chat_id, text='/get_rele Richiedi lo stato del rele')
+    bot.sendMessage(update.message.chat_id, text='/accendi_30_min Accende la caldaia per 30 minuti indipendentemente dalla temperatura')
+    bot.sendMessage(update.message.chat_id, text='/spegni_30_min Spegne la caldaia per 30 minuti indipendentemente dalla temperatura')
+    bot.sendMessage(update.message.chat_id, text='/automatico Rimuove accensione e spegnimento forzati e riabilita il funzionamento normale')
+    bot.sendMessage(update.message.chat_id, text='/dettaglio Visualizza la situazione attuale')
+
+def get_rele(bot, update):
+    rele=r.lrange("rele",-1,-1)[0]
+    if rele == "0":
+	s_rele="Spento"
+    else:
+	s_rele="Acceso"
+    bot.sendMessage(update.message.chat_id, text='Stato Rele=' + s_rele)
+
+def forceoff(bot, update):
+    rele=r.delete("s_forceon")
+    rele=r.set("s_forceoff",1)
+    rele=r.expire("s_forceoff",1800)
+    rele=r.publish("rele_ch",0)
+    rele=r.rpush("rele",0)
+    bot.sendMessage(update.message.chat_id, text='Forzato spegnimento Rele per 30 minuti')
+
+def forceon(bot, update):
+    rele=r.delete("s_forceoff")
+    rele=r.set("s_forceon",1)
+    rele=r.expire("s_forceon",1800)
+    rele=r.publish("rele_ch",1)
+    rele=r.rpush("rele",1)
+    bot.sendMessage(update.message.chat_id, text='Forzata accensione Rele per 30 minuti')
+
+def automatico(bot, update):
+    rele=r.delete("s_forceon")
+    rele=r.delete("s_forceoff")
+    cmd='sudo /root/termostato/termostato.py ' + db_host + ' ' + db_id 
+    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    out = proc.stdout.read()
+    bot.sendMessage(update.message.chat_id, text=out)
+
+def dettaglio(bot, update):
+    cmd='sudo /root/termostato/termostato.py ' + db_host + ' ' + db_id 
+    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    out = proc.stdout.read()
+    bot.sendMessage(update.message.chat_id, text=out)
+
+
+def send_temp_alarm(bot, update):	
+    if last_chat_id is not 0:
+	bot.sendMessage(chat_id=last_chat_id, text="Variazione stato rele")
+	print "Invio stato rele"
+
+def echo(bot, update):
+    bot.sendMessage(update.message.chat_id, text=update.message.text)
+
+
+def error(bot, update, error):
+    logger.warn('Update "%s" caused error "%s"' % (update, error))
+
+def any_message(bot, update):
+    # Save last chat_id to use in reply handler
+    global last_chat_id
+
+    last_chat_id = update.message.chat_id
+    logger.info("New message\nFrom: %s\nchat_id: %d\nText: %s" %
+				(update.message.from_user,
+				 update.message.chat_id,
+				 update.message.text))
+
+
+#def data_subscribe():
+#	channel='rele_ch'
+#	global r
+#        ps = r.pubsub()
+#        ps.subscribe(channel)
+#	try:
+#            for message in ps.listen():
+#                    a=message
+#	    	    temp_handler
+#                    print int(a['data'])
+#	except KeyboardInterrupt:
+#            print "Exit"
+
+
+def main():
+    global update_queue
+    # Create the EventHandler and pass it your bot's token.
+    updater = Updater("173423025:AAGwIvJEq5l1bwCuw61P1R6drpmnJ_38m2w")
+
+    # Get the dispatcher to register handlers
+    dp = updater.dispatcher
+
+    # on different commands - answer in Telegram
+    dp.addTelegramCommandHandler("start", start)
+    dp.addTelegramCommandHandler("help", help)
+    dp.addTelegramCommandHandler("get_rele", get_rele)
+    dp.addTelegramCommandHandler("accendi_30_min", forceon)
+    dp.addTelegramCommandHandler("spegni_30_min", forceoff)
+    dp.addTelegramCommandHandler("automatico", automatico)
+    dp.addTelegramCommandHandler("dettaglio", dettaglio)
+
+    # on noncommand i.e message - echo the message on Telegram
+    dp.addTelegramMessageHandler(echo)
+
+    dp.addStringCommandHandler('temp_alarm', send_temp_alarm)
+
+    # log all errors
+    dp.addErrorHandler(error)
+
+    # Start the Bot
+    update_queue=updater.start_polling()
+
+    # Run the bot until the you presses Ctrl-C or the process receives SIGINT,
+    # SIGTERM or SIGABRT. This should be used most of the time, since
+    # start_polling() is non-blocking and will stop the bot gracefully.
+    #updater.idle()
+
+    try:  
+	# Run the bot until the you presses Ctrl-C or the process receives SIGINT,
+	# SIGTERM or SIGABRT. This should be used most of the time, since
+	# start_polling() is non-blocking and will stop the bot gracefully.
+	updater.idle()
+
+    except KeyboardInterrupt:  
+	print "Exit"
+
+if __name__ == '__main__':
+    
+    #data_subscribe()
+    
+    main()
+

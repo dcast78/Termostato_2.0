@@ -1,0 +1,5 @@
+ check process display_lcd with pidfile /var/run/lcd.pid
+   group root
+   group root
+   start program = "/etc/init.d/display_lcd start"
+   stop program = "/etc/init.d/display_lcd stop"

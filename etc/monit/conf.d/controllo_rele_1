@@ -1,0 +1,5 @@
+ check process controllo_rele_1 with pidfile /var/run/controllo_rele_1.pid
+   group root
+   group root
+   start program = "/etc/init.d/controllo_rele_1 start"
+   stop program = "/etc/init.d/controllo_rele_1 stop"
