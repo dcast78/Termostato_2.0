@@ -1,0 +1,1 @@
+grav ALL=(ALL) NOPASSWD: /root/termostato/termostato.py termostato_m ?
