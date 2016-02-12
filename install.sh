@@ -11,3 +11,5 @@ do
  ln -s /usr/termostato/etc/monit/conf.d/`basename $nome_file` /etc/monit/conf.d/`basename $nome_file`
  #echo `basename $nome_file` 
 done
+
+ln -s /usr/termostato/etc/sudoers.d/grav /etc/sudoers.d/grav
