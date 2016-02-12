@@ -12,7 +12,7 @@ width: 800px;
 {assets:inline_js}
 
 function load_data() {
-	//fa una richiesta ajax per caricare la programmazione giornaliera e popolare la pagina
+	//fa una richiesta ajax per caricare la progrmmazione giornaliera e popolare la pagina
 	var xhttp;
 	var id_elem='';
 	xhttp = new XMLHttpRequest();
@@ -44,8 +44,7 @@ function load_data() {
 {assets:inline_js}
 function showVal(newVal,id_elem) {
 	if (id_elem.substr(0,4)=="temp") {
-		document.getElementById("o_" + id_elem).value=campi[1][newVal];  
-        console.log(document.getElementById("o_" + id_elem).value);
+		document.getElementById("o_" + id_elem).value=campi[1][newVal];   
 	}
 	if (id_elem.substr(0,6)=="camera") {
 		document.getElementById("o_" + id_elem).value=campi[0][newVal];

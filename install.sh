@@ -1,7 +1,7 @@
 #!/bin/bash
 #ln -s /usr/termostato/root/termoostato /root/termostato
 ln -s /usr/termostato/home/pi/termostato /home/pi
-ln -s /usr/termostato/home/grav/www/0 /home/grav/www/
+ln -s /usr/termostato/home/grav/www/0/termo /home/grav/www/0
 ln -s /usr/termostato/home/grav/www/0/user/pages /home/grav/www/0/user
 
 ln -s /usr/termostato/root/termostato /root
