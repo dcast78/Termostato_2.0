@@ -11,8 +11,24 @@ $redis->select($redis_db);
 $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_NONE);
 $giorno=$_REQUEST["day"];
 $giorni=array("vuoto","lun","mar","mer","gio","ven","sab","dom");
-$programmazione[0]=$redis->lRange("camere", 0, -1);
+$camere=$redis->lRange("camere", 0, -1);
+$key = array_search('rele',$camere);
+if($key!==false){
+    unset($camere[$key]);
+}
+$key = array_search('setpoint',$camere);
+if($key!==false){
+    unset($camere[$key]);
+}
+
+for ($x=0;$x<=count($camere)+1;$x++) {
+ if ($camere[$x]) {
+  $programmazione[0][]=$camere[$x];
+ }
+}
 $programmazione[1]=$redis->lRange("temperature", 0, -1);
+
+
 $prog_giorno= $redis->lRange($giorni[$giorno], -48, -1);
 $prog_camera= $redis->lRange("c_" . $giorni[$giorno], -48, -1);
 for ($ora=0 ; $ora<=47 ; $ora++) {
