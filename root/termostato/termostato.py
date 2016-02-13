@@ -80,16 +80,16 @@ else:
 
 #s_blocc e' un sensore in grado di inibire l'accensione della caldaia o spegnerla se e' accesa, puo' essere ad esempio piazzato su una finestra, se la finestra e' aperta e' inutile accendere la caldaia
 s_blocc=r.lrange("s_blocc",-1,-1)[0]
-if s_blocc==1:
+if s_blocc=='1':
 	rele=0
 
 s_forceoff=r.get("s_forceoff")
-if s_forceoff==1:
+if s_forceoff=='1':
 	rele=0
 	print "Spegnimento forzato impostato"
 
 s_forceon=r.get("s_forceon")
-if s_forceon==1:
+if s_forceon=='1':
 	rele=1
 	print "Accensione forzata impostata"
 
