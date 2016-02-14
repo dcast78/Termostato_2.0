@@ -3,9 +3,12 @@
 #
 # Simple Bot to reply to Telegram messages
 # This program is dedicated to the public domain under the CC0 license.
-
+import sys
+sys.path.append("/home/pi/")
+import telegram
 from telegram import Updater
 import logging
+import mytokens
 
 # Enable logging
 logging.basicConfig(
@@ -57,6 +60,10 @@ except Exception as e:
    sys.exit(1024)
 
 
+menu_keyboard = telegram.ReplyKeyboardMarkup([['/accendi_30_min','/spegni_30_min','/auto'],['/dettaglio','/get_rele','/help']])
+menu_keyboard.one_time_keyboard=False
+menu_keyboard.resize_keyboard=True
+
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
@@ -65,13 +72,13 @@ def start(bot, update):
 
 
 def help(bot, update):
-    bot.sendMessage(update.message.chat_id, text='/start')
-    bot.sendMessage(update.message.chat_id, text='/help')
-    bot.sendMessage(update.message.chat_id, text='/get_rele Richiedi lo stato del rele')
+    bot.sendMessage(update.message.chat_id, text='/start', reply_markup=menu_keyboard)
+    bot.sendMessage(update.message.chat_id, text='/help', reply_markup=menu_keyboard)
     bot.sendMessage(update.message.chat_id, text='/accendi_30_min Accende la caldaia per 30 minuti indipendentemente dalla temperatura')
     bot.sendMessage(update.message.chat_id, text='/spegni_30_min Spegne la caldaia per 30 minuti indipendentemente dalla temperatura')
     bot.sendMessage(update.message.chat_id, text='/automatico Rimuove accensione e spegnimento forzati e riabilita il funzionamento normale')
     bot.sendMessage(update.message.chat_id, text='/dettaglio Visualizza la situazione attuale')
+    bot.sendMessage(update.message.chat_id, text='/get_rele Richiedi lo stato del rele')
 
 def get_rele(bot, update):
     rele=r.lrange("rele",-1,-1)[0]
@@ -123,7 +130,7 @@ def error(bot, update, error):
 
 def main():
     # Create the EventHandler and pass it your bot's token.
-    updater = Updater("173423025:AAGwIvJEq5l1bwCuw61P1R6drpmnJ_38m2w")
+    updater = Updater(mytokens.token_string)
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
