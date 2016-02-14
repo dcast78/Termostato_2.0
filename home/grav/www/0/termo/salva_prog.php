@@ -12,6 +12,7 @@ $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_NONE);
 
 $giorni=array("vuoto","lun","mar","mer","gio","ven","sab","dom");
 $temperature=$redis->lRange("temperature", 0, -1);
+
 //print $_REQUEST["temp"];
 $req_temp=$_REQUEST["temp"];
 $req_camera=$_REQUEST["camera"];
@@ -23,7 +24,21 @@ if (is_numeric($req_temp)) {
 	echo "day=" . $giorni[$_REQUEST["day"]] . ", index=" .  $_REQUEST["ind"] . ", temperatura=". $temperatura   ;
 }
 if (is_numeric($req_camera)) {
-	$camere=$redis->lRange("camere", 0, -1);
+	$camere_tot=$redis->lRange("camere", 0, -1);
+	$key = array_search('rele',$camere_tot);
+	if($key!==false){
+	    unset($camere_tot[$key]);
+	}
+	$key = array_search('setpoint',$camere_tot);
+	if($key!==false){
+	    unset($camere_tot[$key]);
+	}
+	for ($x=0;$x<=count($camere_tot)+1;$x++) {
+	 if ($camere_tot[$x]) {
+	  $camere[]=$camere_tot[$x];
+	 }
+	}
+
 	$camera=$camere[$_REQUEST["camera"]];
 	$programmazione=$redis->lSet("c_" . $giorni[$_REQUEST["day"]], $_REQUEST["ind"],$camera);
 	echo "c_day=c_" . $giorni[$_REQUEST["day"]] . ", camera=" . $camera;
