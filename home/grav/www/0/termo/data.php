@@ -9,6 +9,8 @@ $redis->auth("Termostato_2.0");
 $redis->select($redis_db);
 $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_NONE);
 $sensori= $redis->lRange("camere", 0, -1);
+$sensori[]="rele";
+$sensori[]="setpoint";
 if ($_REQUEST["start"]) {
  $start=$_REQUEST["start"];
 } else {
