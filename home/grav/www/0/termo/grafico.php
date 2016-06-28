@@ -23,7 +23,7 @@ body {
 </style>
 <body>
 <div>Cambia visualizzazione: <a href=grafico.php?start=-12&stop=-1>Ultima ora</a> - <a href=grafico.php?start=-24&stop=-1>Ultime 2 ore</a> - <a href=grafico.php?start=-144&stop=-1>Ultime 12 ore</a> - <a href=grafico.php?start=-288&stop=-1>Ultime 24 ore</a> - <a href=grafico.php?start=-2016&stop=-1>Ultimi 7 giorni</a> - <a href=grafico.php?start=-60480&stop=-1>Ultimi 30 giorni</a></div>
-<script src="//d3js.org/d3.v3.js"></script>
+<script src="d3.v3.js"></script>
 <script>
 
 var margin = {top: 20, right: 80, bottom: 60, left: 50}; //,
