@@ -4,6 +4,8 @@ import redis
 import time
 import os
 import sys
+import logging
+logging.basicConfig(filename='/var/log/termostato.log',level=logging.DEBUG,format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %I:%M:%S %p')
 
 channel='rele_ch'
 
@@ -22,8 +24,9 @@ def data_subscribe():
 	ps.subscribe(channel)
 	for message in ps.listen():
 		a=message
-#		print int(a['data'])
+	#	print int(a['data'])
 		GPIO.output(22, int(a['data']))
+		logging.debug(__file__ + ' Set rele pin 22 value -> ' + str(a['data']))
 
 def main():
 	pid = str(os.getpid())
