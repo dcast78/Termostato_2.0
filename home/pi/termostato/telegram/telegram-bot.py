@@ -76,7 +76,7 @@ def help(bot, update):
     bot.sendMessage(update.message.chat_id, text='/help', reply_markup=menu_keyboard)
     bot.sendMessage(update.message.chat_id, text='/accendi_30_min Accende la caldaia per 30 minuti indipendentemente dalla temperatura')
     bot.sendMessage(update.message.chat_id, text='/spegni_30_min Spegne la caldaia per 30 minuti indipendentemente dalla temperatura')
-    bot.sendMessage(update.message.chat_id, text='/automatico Rimuove accensione e spegnimento forzati e riabilita il funzionamento normale')
+    bot.sendMessage(update.message.chat_id, text='/auto Rimuove accensione e spegnimento forzati e riabilita il funzionamento normale')
     bot.sendMessage(update.message.chat_id, text='/dettaglio Visualizza la situazione attuale')
     bot.sendMessage(update.message.chat_id, text='/get_rele Richiedi lo stato del rele')
 
@@ -104,7 +104,8 @@ def forceon(bot, update):
     rele=r.rpush("rele",1)
     bot.sendMessage(update.message.chat_id, text='Forzata accensione Rele per 30 minuti')
 
-def automatico(bot, update):
+def auto(bot, update):
+    print "Auto"
     rele=r.delete("s_forceon")
     rele=r.delete("s_forceoff")
     cmd='sudo /root/termostato/termostato.py ' + db_host + ' ' + db_id
@@ -113,6 +114,7 @@ def automatico(bot, update):
     bot.sendMessage(update.message.chat_id, text=out)
 
 def dettaglio(bot, update):
+    print "dettaglio"
     cmd='sudo /root/termostato/termostato.py ' + db_host + ' ' + db_id
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     out = proc.stdout.read()
@@ -141,7 +143,7 @@ def main():
     dp.addTelegramCommandHandler("get_rele", get_rele)
     dp.addTelegramCommandHandler("accendi_30_min", forceon)
     dp.addTelegramCommandHandler("spegni_30_min", forceoff)
-    dp.addTelegramCommandHandler("automatico", automatico)
+    dp.addTelegramCommandHandler("auto", auto)
     dp.addTelegramCommandHandler("dettaglio", dettaglio)
 
     # on noncommand i.e message - echo the message on Telegram

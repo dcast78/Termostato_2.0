@@ -38,7 +38,7 @@ body {
 }
 {/assets}
 {assets:js order:10}
-//d3js.org/d3.v3.js
+../../../0/termo/d3.v3.js
 {/assets}
 {assets:inline_js}
 function append_chart() {
