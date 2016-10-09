@@ -99,7 +99,7 @@ r.publish("rele_ch", rele)
 #p_blocc e' un'uscita utilizzabile per bloccare una perifarica che non deve stare accesa mentre la caldaia e' in funzione 
 #r.rpush("p_blocc",not rele)
 
-if rele==1 :
+if int(rele) == 1 :
 	stato_rele="Acceso"
 else:
 	stato_rele="Spento"
