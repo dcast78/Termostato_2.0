@@ -93,7 +93,7 @@ def forceoff(bot, update):
     rele=r.set("s_forceoff",1)
     rele=r.expire("s_forceoff",1800)
     rele=r.publish("rele_ch",0)
-    rele=r.rpush("rele",0)
+    rele=r.lset("rele",-1,0)
     bot.sendMessage(update.message.chat_id, text='Forzato spegnimento Rele per 30 minuti')
 
 def forceon(bot, update):
@@ -101,7 +101,7 @@ def forceon(bot, update):
     rele=r.set("s_forceon",1)
     rele=r.expire("s_forceon",1800)
     rele=r.publish("rele_ch",1)
-    rele=r.rpush("rele",1)
+    rele=r.lset("rele",-1,0)
     bot.sendMessage(update.message.chat_id, text='Forzata accensione Rele per 30 minuti')
 
 def auto(bot, update):

@@ -16,7 +16,7 @@ else:
         db_id=0
         print "Utilizzo i parametri di default: " + db_host + " " + str(db_id)
 
-
+print(time.strftime("%Y-%m-%d %H:%M:%S"))
 print "Dettaglio programmazione:"
 #Dichiarazione lista con nome giorni della settimana
 giorni = ["dom","lun","mar","mer","gio","ven","sab"]

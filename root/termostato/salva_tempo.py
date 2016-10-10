@@ -18,7 +18,8 @@ else:
 
 r = redis.StrictRedis(host=db_host, port=6379, db=db_id,password='Termostato_2.0')
 r.rpush("timestamp",time.strftime("%s"))
-#r.rpush("setpoint","")
+r.rpush("setpoint","18")
+r.rpush("rele","16")
 i=0
 while i < r.llen("camere"):
         r.rpush(r.lrange("camere",i,i)[0],"16") 
