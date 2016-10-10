@@ -25,7 +25,10 @@ def data_subscribe():
 	for message in ps.listen():
 		a=message
 		print int(a['data'])
-		GPIO.output(25, int(a['data']))
+		if int(a['data']) == 1 :
+			GPIO.output(25, 0)
+		else :
+			GPIO.output(25, 1)
 		logging.debug(__file__ + ' Set rele pin 25 value -> ' + str(a['data']))
 
 def main():
