@@ -17,7 +17,7 @@ def connect():
 def data_subscribe():
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setwarnings(False)
-	GPIO.setup(25, GPIO.OUT)
+	GPIO.setup(24, GPIO.OUT)
 	global channel
 	r = connect()
 	ps = r.pubsub()
@@ -26,10 +26,10 @@ def data_subscribe():
 		a=message
 		print int(a['data'])
 		if int(a['data']) == 1 :
-			GPIO.output(25, 0)
+			GPIO.output(24, 0)
 		else :
-			GPIO.output(25, 1)
-		logging.debug(__file__ + ' Set rele pin 25 value -> ' + str(a['data']))
+			GPIO.output(24, 1)
+		logging.debug(__file__ + ' Set rele pin 24 value -> ' + str(a['data']))
 
 def main():
 	pid = str(os.getpid())
